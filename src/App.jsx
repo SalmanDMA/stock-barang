@@ -1,3 +1,4 @@
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -5,6 +6,9 @@ import Home from "./pages/Home/Home";
 import DataManagement from "./pages/Data Management/Data";
 import { Overview, DataTable, Login } from "./constants";
 import LoginPage from "./pages/Login/LoginPage";
+import 'react-toastify/dist/ReactToastify.css';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +26,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
-}
+ return (
+  <Provider store={store}>
+   <RouterProvider router={router} />
+  </Provider>
+ );
 
 export default App;
