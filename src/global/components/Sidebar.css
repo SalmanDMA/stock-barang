@@ -1,0 +1,41 @@
+.button-icon {
+    position: relative;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .button-icon:hover {
+    cursor: pointer;
+    color: aqua;
+  }
+
+  .btn-link,
+  .btn-link:visited{
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+
+  .btn-link:active{
+    color: aqua !important;
+  }
+  
+  .button-tooltip {
+    position: absolute;
+    top: auto; 
+    left: 200%; 
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 1px solid aqua;
+    border-radius: 8px;
+    visibility: hidden; 
+    opacity: 0; 
+    transition: opacity 0.3s; 
+    font-size: 15px;
+  }
+  
+  .button-icon:hover .button-tooltip {
+    visibility: visible; 
+    opacity: 1; 
+  }
+  
