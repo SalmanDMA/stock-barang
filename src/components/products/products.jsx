@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setEditingProduct, setProducts } from '../../store/slices/productsSlices';
 import { setCategoryQuery, setCategory, setCategoryValue } from '../../store/slices/categoriesSlices';
 import { Link } from 'react-router-dom';
+import Layout from '../global/Layout';
 
 export default function Product() {
  const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,6 @@ export default function Product() {
  const [search, setSearch] = useState(false);
  const [searchQuery, setSearchQuery] = useState('');
  const [showPDF, setShowPDF] = useState(false);
- //  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
  useEffect(() => {
   getDataProducts();
@@ -167,123 +167,122 @@ export default function Product() {
  };
 
  return (
-  <div className='mt-5 container-fluid'>
-   <nav>
-    <Link to={'/home'}>Home</Link>
-   </nav>
-   <ToastContainer position='top-right' autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-   <div className='card shadow mb-4'>
-    <div className='card-header bg-secondary-subtle py-3'>
-     <h4 className='m-0 fw-bold text-primary'>Data Stock Barang</h4>
-    </div>
-    <div className='card-body'>
-     <div className='mb-3 d-flex gap-3'>
-      <button className='btn btn-success d-flex gap-2 align-items-center' onClick={handleOpenPopup}>
-       <BiPlus />
-       Add Data Stock
-      </button>
-      <button className='btn btn-primary d-flex gap-2 align-items-center' onClick={handleShowPDF}>
-       {showPDF ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-       {showPDF ? 'Hide Preview Data Stock' : 'Show Preview Data Stock'}
-      </button>
+  <Layout>
+   <div className='mt-5 '>
+    <ToastContainer position='top-right' autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+    <div className='card shadow mb-4'>
+     <div className='card-header bg-secondary-subtle py-3'>
+      <h4 className='m-0 fw-bold text-primary'>Data Stock Barang</h4>
      </div>
-     <div className='mb-4 d-flex justify-content-between align-items-center flex-wrap'>
-      <div className='d-flex gap-3 align-items-center w-25'>
-       <p className='m-0'>Category :</p>
-       <select className='form-select w-50' aria-label='Default select example' value={categoryValue} onChange={handleCategoryChange}>
-        {categoryQuery.map((cat) => (
-         <option key={cat.id} value={cat.name}>
-          {cat.name}
-         </option>
-        ))}
-       </select>
+     <div className='card-body'>
+      <div className='mb-3 d-flex gap-3'>
+       <button className='btn btn-success d-flex gap-2 align-items-center' onClick={handleOpenPopup}>
+        <BiPlus />
+        Add Data Stock
+       </button>
+       <button className='btn btn-primary d-flex gap-2 align-items-center' onClick={handleShowPDF}>
+        {showPDF ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+        {showPDF ? 'Hide Preview Data Stock' : 'Show Preview Data Stock'}
+       </button>
       </div>
-      <div className='input-group w-25'>
-       <span className='input-group-text'>Search</span>
-       <input type='search' className='form-control' aria-label='search' placeholder='Search by name here...' onChange={handleSearchChange} onBlur={handleSearchBlur} value={searchQuery} />
+      <div className='mb-4 d-flex justify-content-between align-items-center flex-wrap'>
+       <div className='d-flex gap-3 align-items-center w-25'>
+        <p className='m-0'>Category :</p>
+        <select className='form-select w-50' aria-label='Default select example' value={categoryValue} onChange={handleCategoryChange}>
+         {categoryQuery.map((cat) => (
+          <option key={cat.id} value={cat.name}>
+           {cat.name}
+          </option>
+         ))}
+        </select>
+       </div>
+       <div className='input-group w-25'>
+        <span className='input-group-text'>Search</span>
+        <input type='search' className='form-control' aria-label='search' placeholder='Search by name here...' onChange={handleSearchChange} onBlur={handleSearchBlur} value={searchQuery} />
+       </div>
       </div>
+      <div className='table-responsive'>
+       {!showPDF && (
+        <table className='table table-bordered text-center align-middle'>
+         <thead>
+          <tr>
+           <th className='bg-secondary-subtle'>No</th>
+           <th className='bg-secondary-subtle'>DATE</th>
+           <th className='bg-secondary-subtle'>ID PRODUCT</th>
+           <th className='bg-secondary-subtle'>NAME PRODUCT</th>
+           <th className='bg-secondary-subtle'>QTY</th>
+           <th className='bg-secondary-subtle'>CATEGORY</th>
+           <th className='bg-secondary-subtle'>ACTION</th>
+          </tr>
+         </thead>
+         <tbody>
+          {search
+           ? filteredProductsSearch.map((product, index) => (
+              <tr key={product.id}>
+               <td>{index + 1}</td>
+               <td>{product.date}</td>
+               <td>{product.idProduct}</td>
+               <td>{product.name}</td>
+               <td>{product.qty}</td>
+               <td>{product.category}</td>
+               <td className='d-flex gap-2 justify-content-center'>
+                <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
+                 <BiEdit className='fs-5' />
+                </button>
+                <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
+                 <BiTrash className='fs-5' />
+                </button>
+               </td>
+              </tr>
+             ))
+           : category &&
+             filteredProductsCategory.map((product, index) => (
+              <tr key={product.id}>
+               <td>{index + 1}</td>
+               <td>{product.date}</td>
+               <td>{product.idProduct}</td>
+               <td>{product.name}</td>
+               <td>{product.qty}</td>
+               <td>{product.category}</td>
+               <td className='d-flex gap-2 justify-content-center'>
+                <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
+                 <BiEdit className='fs-5' />
+                </button>
+                <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
+                 <BiTrash className='fs-5' />
+                </button>
+               </td>
+              </tr>
+             ))}
+          {!search &&
+           !category &&
+           products.map((product, index) => (
+            <tr key={product.id}>
+             <td>{index + 1}</td>
+             <td>{product.date}</td>
+             <td>{product.idProduct}</td>
+             <td>{product.name}</td>
+             <td>{product.qty}</td>
+             <td>{product.category}</td>
+             <td className='d-flex gap-2 justify-content-center'>
+              <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
+               <BiEdit className='fs-5' />
+              </button>
+              <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
+               <BiTrash className='fs-5' />
+              </button>
+             </td>
+            </tr>
+           ))}
+         </tbody>
+        </table>
+       )}
+      </div>
+      {showPDF && <ProductDownload search={search} filteredProductsSearch={filteredProductsSearch} category={category} filteredProductsCategory={filteredProductsCategory} products={products} />}
      </div>
-     <div className='table-responsive'>
-      {!showPDF && (
-       <table className='table table-bordered text-center align-middle'>
-        <thead>
-         <tr>
-          <th className='bg-secondary-subtle'>No</th>
-          <th className='bg-secondary-subtle'>DATE</th>
-          <th className='bg-secondary-subtle'>ID PRODUCT</th>
-          <th className='bg-secondary-subtle'>NAME PRODUCT</th>
-          <th className='bg-secondary-subtle'>QTY</th>
-          <th className='bg-secondary-subtle'>CATEGORY</th>
-          <th className='bg-secondary-subtle'>ACTION</th>
-         </tr>
-        </thead>
-        <tbody>
-         {search
-          ? filteredProductsSearch.map((product, index) => (
-             <tr key={product.id}>
-              <td>{index + 1}</td>
-              <td>{product.date}</td>
-              <td>{product.idProduct}</td>
-              <td>{product.name}</td>
-              <td>{product.qty}</td>
-              <td>{product.category}</td>
-              <td className='d-flex gap-2 justify-content-center'>
-               <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
-                <BiEdit className='fs-5' />
-               </button>
-               <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
-                <BiTrash className='fs-5' />
-               </button>
-              </td>
-             </tr>
-            ))
-          : category &&
-            filteredProductsCategory.map((product, index) => (
-             <tr key={product.id}>
-              <td>{index + 1}</td>
-              <td>{product.date}</td>
-              <td>{product.idProduct}</td>
-              <td>{product.name}</td>
-              <td>{product.qty}</td>
-              <td>{product.category}</td>
-              <td className='d-flex gap-2 justify-content-center'>
-               <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
-                <BiEdit className='fs-5' />
-               </button>
-               <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
-                <BiTrash className='fs-5' />
-               </button>
-              </td>
-             </tr>
-            ))}
-         {!search &&
-          !category &&
-          products.map((product, index) => (
-           <tr key={product.id}>
-            <td>{index + 1}</td>
-            <td>{product.date}</td>
-            <td>{product.idProduct}</td>
-            <td>{product.name}</td>
-            <td>{product.qty}</td>
-            <td>{product.category}</td>
-            <td className='d-flex gap-2 justify-content-center'>
-             <button className='btn btn-primary' onClick={() => handleEdit(product.id)}>
-              <BiEdit className='fs-5' />
-             </button>
-             <button className='btn btn-danger' onClick={() => deleteProduct(product.id, product.category)}>
-              <BiTrash className='fs-5' />
-             </button>
-            </td>
-           </tr>
-          ))}
-        </tbody>
-       </table>
-      )}
-     </div>
-     {showPDF && <ProductDownload search={search} filteredProductsSearch={filteredProductsSearch} category={category} filteredProductsCategory={filteredProductsCategory} products={products} />}
     </div>
+    <ProductInput isOpen={isOpen} handleOpenPopup={handleOpenPopup} updateProduct={updateProduct} addProduct={addProduct} />
    </div>
-   <ProductInput isOpen={isOpen} handleOpenPopup={handleOpenPopup} updateProduct={updateProduct} addProduct={addProduct} />
-  </div>
+  </Layout>
  );
 }
